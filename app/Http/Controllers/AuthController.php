@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,12 +47,36 @@ class AuthController extends Controller
         auth()->logout();
 
         return response()->json(['success' => 'Berhasil Logout']);
-    }
+    }   
 
     public function userIsLogin()
     {
-        
-        return response()->json(Auth::user());
+
+        $data = [];
+        $user = Auth::user();
+        $student = Student::where('user_id', Auth::user()->id)->get()->first();
+        $admin = Admin::where("user_id", Auth::user()->id)->get()->first();
+
+        if($student) {
+            $data = [
+                'student_id' => $student['id'],
+                'user' =>  $user
+            ];
+            
+            return response()->json($data);
+        }
+
+        if($admin) {
+            $data = [
+                'admin_id' => $student['id'],
+                'user' =>  $user
+            ];
+            
+            return response()->json($data);
+        }
+
+        $data = ['user' => $user];  
+        return response()->json($data);
     }
 
     public function refresh()

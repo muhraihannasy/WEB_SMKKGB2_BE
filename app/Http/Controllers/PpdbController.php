@@ -30,6 +30,7 @@ class PpdbController extends Controller
             ->select(
                 // Data Registration
                 'rgs.id',
+                'rgs.student_id',
                 'rgs.class',
                 'rgs.type_registration',
                 'rgs.from_school',
@@ -37,7 +38,7 @@ class PpdbController extends Controller
          
                 // Data Users
                 'users.fullname',
-                'users.photo'
+                'users.photo',
 
             )
             ->get();
@@ -48,14 +49,14 @@ class PpdbController extends Controller
     public function show($id)
     {
         $data = DB::table('registrations as rgs')
-                ->where('rgs.id', $id)
+                ->where('rgs.student_id', $id)
                 ->join('students as std', 'rgs.student_id', '=', 'std.id')
                 ->join('users', 'std.user_id', '=', 'users.id')
                 ->join('student_fathers as fth', 'std.student_father_id', '=', 'fth.id')
                 ->join('student_mothers as mth', 'std.student_mother_id', '=', 'mth.id')
                 ->join('student_guardians as grd', 'std.student_guardian_id', '=', 'grd.id')
-                ->join('student_achievements as ach', 'std.student_achievement_id', '=', 'ach.id')
-                ->join('student_scholarships as sch', 'std.student_scholarship_id', '=', 'sch.id')
+                // ->join('student_achievements as ach', 'std.student_achievement_id', '=', 'ach.id')
+                // ->join('student_scholarships as sch', 'std.student_scholarship_id', '=', 'sch.id')
                 ->select(
                     // Data Registration
                     'rgs.student_id',
@@ -69,6 +70,7 @@ class PpdbController extends Controller
                     'rgs.no_serial_skhus',
                     'rgs.extracurricular',
                     'rgs.uniform',
+                    'rgs.status',
 
                     // Data Student 
                     'std.gender as student_gender',
@@ -125,18 +127,10 @@ class PpdbController extends Controller
                     'grd.special_needs as guardian_special_needs',
 
                     // Data Scholarship
-                    'sch.type as scholarship_type',
-                    'sch.descriptions as scholarship_descriptions',
-                    'sch.year_start_at as scholarship_year_start_at',
-                    'sch.year_finish_at as scholarship_year_finish_at',
-
-                    // Data Achievement
-                    'ach.achievement_name as achievement_name',
-                    'ach.type as achievement_type',
-                    'ach.level as achievement_level',
-                    'ach.year as achievement_year',
-                    'ach.organizer_by as achievement_organizer_by'
-
+                    // 'sch.type as scholarship_type',
+                    // 'sch.descriptions as scholarship_descriptions',
+                    // 'sch.year_start_at as scholarship_year_start_at',
+                    // 'sch.year_finish_at as scholarship_year_finish_at',
                 )
                 ->get();
 
@@ -180,7 +174,8 @@ class PpdbController extends Controller
                 'special_needs' => $request['guardian_special_needs'],
             ]);
 
-            foreach ($request['scholarship'] as $sch) {
+            if($request['scholarships']) {
+                foreach ($request['scholarships'] as $sch) {
                 $scholarship = StudentScholarship::create([
                     'user_id' => Auth::user()->id,
                     'type' => $sch['type'],
@@ -189,25 +184,30 @@ class PpdbController extends Controller
                     'year_finish_at' => $sch['year_finish_at']
                 ]);
             }
-
-            foreach ($request['achievement'] as $ach) {
-                $achievement = StudentAchievement::create([
-                    'user_id' => Auth::user()->ids,
-                    'achievement_name' => $ach['achievement_name'],
-                    'type' => $ach['type'],
-                    'level' => $ach['level'],
-                    'year' => $ach['year'],
-                    'organizer_by' => $ach['organizer_by']
-                ]);
             }
+
+            if($request['achievements']) {
+                foreach ($request['achievements'] as $ach) {
+                    $achievement = StudentAchievement::create([
+                        'user_id' => Auth::user()->ids,
+                        'achievement_name' => $ach['achievement_name'],
+                        'type' => $ach['type'],
+                        'level' => $ach['level'],
+                        'year' => $ach['year'],
+                        'organizer_by' => $ach['organizer_by']
+                    ]);
+                }
+            }
+
+          
 
             $student = Student::create([
                 'user_id' => Auth::user()->id,
                 'student_father_id' => $father->id,
                 'student_mother_id' => $mother->id,
                 'student_guardian_id' => $guardian->id,
-                'student_scholarship_id' => $scholarship->id,
-                'student_achievement_id' => $achievement->id,
+                'student_scholarship_id' => $scholarship->id ?? Auth::user()->id,
+                'student_achievement_id' => $achievement->id ?? Auth::user()->id,
                 'gender' => $request['gender'],
                 'nisn' => $request['nisn'],
                 'nik' => $request['nik'],
@@ -239,7 +239,8 @@ class PpdbController extends Controller
                 'no_serial_skhus' => $request['no_serial_skhus'],
                 'class_pick' => $request['class_pick'],
                 'extracurricular' => $request['extracurricular'],
-                'uniform' => $request['uniform']
+                'uniform' => $request['uniform'],
+                'status' => $request['status_registration']
             ]);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
