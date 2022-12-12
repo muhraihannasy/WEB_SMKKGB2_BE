@@ -75,6 +75,8 @@ class PpdbController extends Controller
                     // Data Student 
                     'std.gender as student_gender',
                     'std.nisn',
+                    'std.gender',
+                    'std.birth',
                     'std.nik as student_nik',
                     'std.birth as student_birth',
                     'std.no_certificate_registration',
