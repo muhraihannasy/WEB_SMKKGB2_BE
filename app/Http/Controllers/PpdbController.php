@@ -25,8 +25,7 @@ class PpdbController extends Controller
     public function list()
     {
         $data = DB::table('registrations as rgs')
-            ->join('students', 'rgs.student_id', '=', 'students.id')
-            ->join('users', 'students.user_id', '=', 'users.id')
+            ->join('students', 'rgs.student_id', '=', 'students.id')//
             ->select(
                 // Data Registration
                 'rgs.id',
@@ -77,8 +76,7 @@ class PpdbController extends Controller
                     'std.nisn',
                     'std.gender',
                     'std.birth',
-                    'std.nik as student_nik',
-                    'std.birth as student_birth',
+                    'std.nik',
                     'std.no_certificate_registration',
                     'std.religion',
                     'std.transport',
@@ -176,27 +174,27 @@ class PpdbController extends Controller
                 'special_needs' => $request['guardian_special_needs'],
             ]);
 
-            if($request['scholarships']) {
+            if($request->has('scholarships')) {
                 foreach ($request['scholarships'] as $sch) {
                 $scholarship = StudentScholarship::create([
                     'user_id' => Auth::user()->id,
-                    'type' => $sch['type'],
-                    'descriptions' => $sch['descriptions'],
-                    'year_start_at' => $sch['year_start_at'],
-                    'year_finish_at' => $sch['year_finish_at']
+                    'type' => $sch['type_scholarship'] == "" ? null : $ach['type_scholarship'],
+                    'descriptions' => $sch['descriptions_scholarship'] == "" ? null : $ach['descriptions_scholarship'],
+                    'year_start_at' => $sch['year_start_at_scholarship'] == "" ? null : $ach['year_start_at_scholarship'],
+                    'year_finish_at' => $sch['year_finish_at_scholarship'] == "" ? null : $ach['year_finish_at_scholarship']
                 ]);
             }
             }
 
-            if($request['achievements']) {
+            if($request->has('achievements')) {
                 foreach ($request['achievements'] as $ach) {
                     $achievement = StudentAchievement::create([
                         'user_id' => Auth::user()->ids,
-                        'achievement_name' => $ach['achievement_name'],
-                        'type' => $ach['type'],
-                        'level' => $ach['level'],
-                        'year' => $ach['year'],
-                        'organizer_by' => $ach['organizer_by']
+                        'achievement_name' => $ach['name_achievement'] == "" ? null : $ach['name_achievement'],
+                        'type' => $ach['type_achievement'] == "" ? null : $ach['type_achievement'],
+                        'level' => $ach['level_achievement'] == "" ? null : $ach['level_achievement'],
+                        'year' => $ach['year_achievement'] == "" ? null : $ach['year_achievement'],
+                        'organizer_by' => $ach['organinizer_achievement'] == "" ? null : $ach['organinizer_achievement']
                     ]);
                 }
             }
