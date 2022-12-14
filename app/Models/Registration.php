@@ -18,6 +18,8 @@ class Registration extends Model
         'no_serial_skhus',
         'extracurricular',
         'uniform',
+        'is_paid',
+        'code_registration',
         'status',
     ];
 }

@@ -16,9 +16,8 @@ use App\Models\User;
 */
 
 $router->get('/', function () use ($router) {
-    return "Hello";
+    return $router->app->version();
 });
-
 
 // Auth
 $router->group(['prefix' => 'auth'], function () use ($router) {
@@ -36,7 +35,7 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
     $router->get('/ppdb/{id}', 'PpdbController@show');
     $router->put('/ppdb/registration/update/{id}', 'PpdbController@updateStatusRegistration');
 
-    // User Type 
+    // User Typ e 
     $router->get('/user_type', 'UserTypeController@list');
 });
 

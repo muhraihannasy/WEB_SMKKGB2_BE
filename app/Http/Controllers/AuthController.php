@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Models\Student;
 use App\Models\User;
+use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,19 +27,36 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'username' => 'required|unique:users',
             'email' => 'required|email|unique:users',
         ]);
 
-        $user = new User();
-        $user->user_type_id = $request['user_type_id'];
-        $user->fullname = $request['fullname'];
-        $user->username = $request['username'];
-        $user->phone = $request['phone'];
-        $user->email = $request['email'];
-        $user->password = Hash::make($request['password']);
-        $user->save();
+        $code = \Illuminate\Support\Str::random(10);
+        
+        try {
 
+            $user = User::create([
+                'user_type_id' => $request['user_type_id'],
+                'fullname' => $request['fullname'],
+                'phone' => $request['phone'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password']),
+            ]);
+
+            $student = Student::create([
+                'user_id' => $user->id
+            ]);
+
+            $registration = Registration::create([
+                'student_id' => $student->id,
+                'class_pick' => $request['class_pick'],
+                'code_registration' => $code,
+            ]);
+
+
+        } catch(Exception $e) {
+            return response()->json(['error' => $e->getMessage()]);
+        }
+     
         return response()->json(['success' => 'Anda Sudah Terdaftar Silahkan Login']);
     }
 

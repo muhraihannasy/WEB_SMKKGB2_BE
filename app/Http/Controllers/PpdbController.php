@@ -22,33 +22,44 @@ class PpdbController extends Controller
         $this->middleware('auth');
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        $data = DB::table('registrations as rgs')
-            ->join('students', 'rgs.student_id', '=', 'students.id')//
+            $data = DB::table('registrations as rgs')
+            ->join('students as std', 'rgs.student_id', '=', 'std.id')
+            ->join('users', 'std.user_id', 'users.id')
             ->select(
                 // Data Registration
                 'rgs.id',
                 'rgs.student_id',
-                'rgs.class',
                 'rgs.type_registration',
                 'rgs.from_school',
+                'rgs.is_paid',
                 'rgs.status',
-         
+                
                 // Data Users
                 'users.fullname',
                 'users.photo',
 
-            )
-            ->get();
+            );
+        // if($request->has('filter')) {
+        //     $filter = $request->filter;
+        //     return response()->json($data->where('rgs.is_paid', $filter)->get());
+        // }
+    
 
-        return response()->json($data);
+        return response()->json($data->get());
     }
 
     public function show($id)
     {
-        $data = DB::table('registrations as rgs')
-                ->where('rgs.student_id', $id)
+             $registration = DB::table('registrations as rgs')->where('rgs.student_id', $id);
+             $is_paid = $registration->get()->first()->is_paid;
+            
+            if(!$is_paid) {
+                return response()->json($registration->get()->first());
+            } 
+
+                 $data = DB::table('registrations as rgs')->where('rgs.student_id', $id)
                 ->join('students as std', 'rgs.student_id', '=', 'std.id')
                 ->join('users', 'std.user_id', '=', 'users.id')
                 ->join('student_fathers as fth', 'std.student_father_id', '=', 'fth.id')
@@ -60,7 +71,6 @@ class PpdbController extends Controller
                     // Data Registration
                     'rgs.student_id',
                     'rgs.payment_id',
-                    'rgs.class',
                     'rgs.class_pick',
                     'rgs.type_registration',
                     'rgs.from_school',
@@ -69,6 +79,8 @@ class PpdbController extends Controller
                     'rgs.no_serial_skhus',
                     'rgs.extracurricular',
                     'rgs.uniform',
+                    'rgs.is_paid',
+                    'rgs.code_registration',
                     'rgs.status',
 
                     // Data Student 
@@ -97,7 +109,7 @@ class PpdbController extends Controller
                     'users.fullname',
                     'users.photo',
                     'users.phone',
-                    'users.email',
+                    'users.email',  
 
                     // Data Father
                     'fth.name as father_name',
@@ -132,9 +144,10 @@ class PpdbController extends Controller
                     // 'sch.year_start_at as scholarship_year_start_at',
                     // 'sch.year_finish_at as scholarship_year_finish_at',
                 )
-                ->get();
+                ->get()->first();
 
-        return response()->json($data);
+                return response()->json(    $data);
+
     }
 
     public function store(Request $request)
@@ -199,8 +212,6 @@ class PpdbController extends Controller
                 }
             }
 
-          
-
             $student = Student::create([
                 'user_id' => Auth::user()->id,
                 'student_father_id' => $father->id,
@@ -231,7 +242,6 @@ class PpdbController extends Controller
 
             $registration = Registration::create([
                 'student_id' => $student['id'],
-                'class' => $request['class'],
                 'type_registration' => $request['type_registration'],
                 'from_school' => $request['from_school'],
                 'no_examinee' => $request['no_examinee'],
@@ -363,8 +373,9 @@ class PpdbController extends Controller
             return response()->json($e->getMessage());
         }
 
-        return response()->json($registration->select('status')->get());
+        return response()->json($registration->select('status')->get()->first());
     }
+    
 
     public function util()
     {
