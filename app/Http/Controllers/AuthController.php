@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\Registration;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -54,7 +55,7 @@ class AuthController extends Controller
             ]);
 
 
-        } catch(Exception $e) {
+        } catch(Exception    $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
      

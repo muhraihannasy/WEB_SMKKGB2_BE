@@ -146,12 +146,12 @@ class PpdbController extends Controller
                 )
                 ->get()->first();
 
-                return response()->json(    $data);
+                return response()->json($data);
 
     }
 
     public function store(Request $request)
-    {
+    {   
         $userId = Auth::user()->id;
         $student = DB::table('students')->where('user_id', $userId);
         $studentId = $student->get()->first()->id;
