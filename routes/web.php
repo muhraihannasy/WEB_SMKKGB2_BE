@@ -33,7 +33,10 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
     // PPDB
     $router->get('/ppdb', 'PpdbController@list');
     $router->get('/ppdb/{id}', 'PpdbController@show');
-    $router->put('/ppdb/registration/update/{id}', 'PpdbController@updateStatusRegistration');
+    
+    // Registration
+    $router->put('/registration/update/{id}', 'RegistrationController@updateStatusRegistration');
+    $router->post('/registration/code', 'RegistrationController@checkCodeRegistration');
 
     // User Typ e 
     $router->get('/user_type', 'UserTypeController@list');
@@ -46,5 +49,9 @@ $router->group(['prefix' => 'student'], function () use ($router) {
     $router->get('/ppdb/{id}', 'PpdbController@show');
     $router->post('/ppdb/store', 'PpdbController@store');
     $router->put('/ppdb/update/{id}', 'PpdbController@update');
+    
+    // Registration
+    $router->get('/registration/{id}', 'RegistrationController@show');
+
 
 });

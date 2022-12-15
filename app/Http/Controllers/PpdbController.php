@@ -152,6 +152,11 @@ class PpdbController extends Controller
 
     public function store(Request $request)
     {
+        $userId = Auth::user()->id;
+        $student = DB::table('students')->where('user_id', $userId);
+        $studentId = $student->get()->first()->id;
+        $registration = DB::table('registrations')->where('student_id', $studentId);
+
         try {
             $father = StudentFather::create([
                 'user_id' => Auth::user()->id ,
@@ -191,10 +196,10 @@ class PpdbController extends Controller
                 foreach ($request['scholarships'] as $sch) {
                 $scholarship = StudentScholarship::create([
                     'user_id' => Auth::user()->id,
-                    'type' => $sch['type_scholarship'] == "" ? null : $ach['type_scholarship'],
-                    'descriptions' => $sch['descriptions_scholarship'] == "" ? null : $ach['descriptions_scholarship'],
-                    'year_start_at' => $sch['year_start_at_scholarship'] == "" ? null : $ach['year_start_at_scholarship'],
-                    'year_finish_at' => $sch['year_finish_at_scholarship'] == "" ? null : $ach['year_finish_at_scholarship']
+                    'type' => $sch['type_scholarship'] == "" ? null : $sch['type_scholarship'],
+                    'descriptions' => $sch['descriptions_scholarship'] == "" ? null : $sch['descriptions_scholarship'],
+                    'year_start_at' => $sch['year_start_at_scholarship'] == "" ? null : $sch['year_start_at_scholarship'],
+                    'year_finish_at' => $sch['year_finish_at_scholarship'] == "" ? null : $sch['year_finish_at_scholarship']
                 ]);
             }
             }
@@ -202,7 +207,7 @@ class PpdbController extends Controller
             if($request->has('achievements')) {
                 foreach ($request['achievements'] as $ach) {
                     $achievement = StudentAchievement::create([
-                        'user_id' => Auth::user()->ids,
+                        'user_id' => Auth::user()->id,
                         'achievement_name' => $ach['name_achievement'] == "" ? null : $ach['name_achievement'],
                         'type' => $ach['type_achievement'] == "" ? null : $ach['type_achievement'],
                         'level' => $ach['level_achievement'] == "" ? null : $ach['level_achievement'],
@@ -212,13 +217,12 @@ class PpdbController extends Controller
                 }
             }
 
-            $student = Student::create([
-                'user_id' => Auth::user()->id,
+             $student->update([
                 'student_father_id' => $father->id,
                 'student_mother_id' => $mother->id,
                 'student_guardian_id' => $guardian->id,
-                'student_scholarship_id' => $scholarship->id ?? Auth::user()->id,
-                'student_achievement_id' => $achievement->id ?? Auth::user()->id,
+                'student_scholarship_id' => $scholarship->id,
+                'student_achievement_id' => $achievement->id ,
                 'gender' => $request['gender'],
                 'nisn' => $request['nisn'],
                 'nik' => $request['nik'],
@@ -240,17 +244,14 @@ class PpdbController extends Controller
                 'time_to_school' => $request['time_to_school'],
             ]);
 
-            $registration = Registration::create([
-                'student_id' => $student['id'],
+            $registration->update([
                 'type_registration' => $request['type_registration'],
-                'from_school' => $request['from_school'],
                 'no_examinee' => $request['no_examinee'],
                 'no_serial_diploma' => $request['no_serial_diploma'],
                 'no_serial_skhus' => $request['no_serial_skhus'],
-                'class_pick' => $request['class_pick'],
                 'extracurricular' => $request['extracurricular'],
                 'uniform' => $request['uniform'],
-                'status' => $request['status_registration']
+                'status' => 'Belum Terveritifikasi'
             ]);
         } catch (Exception $e) {
             return response()->json($e->getMessage());
@@ -364,17 +365,7 @@ class PpdbController extends Controller
         return response()->json(['success' => "Data Berhasil Disimpan"]);
     }
 
-    public function updateStatusRegistration($id, Request $request)
-    {
-        $registration = Registration::where('id', $id);
-        try {
-            $registration->update(['status' => $request['status_registration']]);
-        } catch(Exception $e) {
-            return response()->json($e->getMessage());
-        }
-
-        return response()->json($registration->select('status')->get()->first());
-    }
+        
     
 
     public function util()

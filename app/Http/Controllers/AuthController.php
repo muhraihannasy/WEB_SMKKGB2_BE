@@ -27,7 +27,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required|email|unique:users',
+            'email' => 'required|unique:users',
         ]);
 
         $code = \Illuminate\Support\Str::random(10);
@@ -37,6 +37,7 @@ class AuthController extends Controller
             $user = User::create([
                 'user_type_id' => $request['user_type_id'],
                 'fullname' => $request['fullname'],
+                'from_school' => $request['from_school'],
                 'phone' => $request['phone'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
