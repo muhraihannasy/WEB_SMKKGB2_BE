@@ -37,6 +37,18 @@ class RegistrationController extends Controller
         return response()->json($registration);
     }
 
+    public function upload(Request $request)
+    {
+        if(!$request->hasFile('image')) return response()->json(['error' => "erorrs"]);
+
+
+         $image = $request->file('image');
+         $name = time().'.'.$image->getClientOriginalExtension();
+         $image->move(public_path('images'), $name);
+        
+        return response()->json(['path' => url('images/'.$name)]);
+    }
+
     public function updateStatusRegistration($id, Request $request)
     {
         $registration = Registration::where('id', $id);

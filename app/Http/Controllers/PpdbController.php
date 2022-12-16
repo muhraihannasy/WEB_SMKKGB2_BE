@@ -52,13 +52,6 @@ class PpdbController extends Controller
 
     public function show($id)
     {
-             $registration = DB::table('registrations as rgs')->where('rgs.student_id', $id);
-             $is_paid = $registration->get()->first()->is_paid;
-            
-            if(!$is_paid) {
-                return response()->json($registration->get()->first());
-            } 
-
                  $data = DB::table('registrations as rgs')->where('rgs.student_id', $id)
                 ->join('students as std', 'rgs.student_id', '=', 'std.id')
                 ->join('users', 'std.user_id', '=', 'users.id')
@@ -151,7 +144,7 @@ class PpdbController extends Controller
     }
 
     public function store(Request $request)
-    {   
+    {
         $userId = Auth::user()->id;
         $student = DB::table('students')->where('user_id', $userId);
         $studentId = $student->get()->first()->id;
@@ -203,8 +196,8 @@ class PpdbController extends Controller
                 ]);
             }
             }
-
-            if($request->has('achievements')) {
+ 
+            if ($request->has('achievements')) {
                 foreach ($request['achievements'] as $ach) {
                     $achievement = StudentAchievement::create([
                         'user_id' => Auth::user()->id,

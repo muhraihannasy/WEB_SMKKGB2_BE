@@ -52,6 +52,8 @@ $router->group(['prefix' => 'student'], function () use ($router) {
     
     // Registration
     $router->get('/registration/{id}', 'RegistrationController@show');
+    $router->post('/registration/upload', 'RegistrationController@upload');
 
 
 });
+
