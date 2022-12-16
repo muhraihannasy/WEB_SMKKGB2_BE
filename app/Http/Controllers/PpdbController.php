@@ -218,7 +218,9 @@ class PpdbController extends Controller
                 'student_achievement_id' => $achievement->id ,
                 'gender' => $request['gender'],
                 'nisn' => $request['nisn'],
+                'nisn_image' => $request['foto_nisn'],
                 'nik' => $request['nik'],
+                'kartu_keluarga_image' => $request['foto_kartu_keluarga'],
                 'birth' => $request['birth'],
                 'no_certificate_registration' => $request['no_certificate_registration'],
                 'religion' => $request['religion'],
@@ -226,7 +228,7 @@ class PpdbController extends Controller
                 'special_needs' => $request['special_needs'],
                 'address' => $request['address'],
                 'residence' => $request['residence'],
-                'no_kks' => $request['no_kks'],
+                'kks' => $request['kks'],
                 'order_family' => $request['order_family'],
                 'kps' => $request['kps'],
                 'kip' => $request['kip'],
@@ -239,6 +241,7 @@ class PpdbController extends Controller
 
             $registration->update([
                 'type_registration' => $request['type_registration'],
+    
                 'no_examinee' => $request['no_examinee'],
                 'no_serial_diploma' => $request['no_serial_diploma'],
                 'no_serial_skhus' => $request['no_serial_skhus'],
