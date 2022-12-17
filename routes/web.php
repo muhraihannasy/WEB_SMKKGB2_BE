@@ -42,7 +42,7 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
 
     // User Typ e 
     $router->get('/user_type', 'UserTypeController@list');
-});
+}); 
 
 // Student
 $router->group(['prefix' => 'student'], function () use ($router) {

@@ -38,7 +38,6 @@ class AuthController extends Controller
             $user = User::create([
                 'user_type_id' => $request['user_type_id'],
                 'fullname' => $request['fullname'],
-                'from_school' => $request['from_school'],
                 'phone' => $request['phone'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
@@ -50,6 +49,7 @@ class AuthController extends Controller
 
             $registration = Registration::create([
                 'student_id' => $student->id,
+                'from_school' => $request['from_school'],
                 'class_pick' => $request['class_pick'],
                 'code_registration' => $code,
             ]);

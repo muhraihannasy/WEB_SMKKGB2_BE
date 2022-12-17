@@ -52,16 +52,15 @@ class PpdbController extends Controller
 
     public function show($id)
     {
-                 $data = DB::table('registrations as rgs')->where('rgs.student_id', $id)
-                ->join('students as std', 'rgs.student_id', '=', 'std.id')
-                ->join('users', 'std.user_id', '=', 'users.id')
-                ->join('student_fathers as fth', 'std.student_father_id', '=', 'fth.id')
-                ->join('student_mothers as mth', 'std.student_mother_id', '=', 'mth.id')
-                ->join('student_guardians as grd', 'std.student_guardian_id', '=', 'grd.id')
-                // ->join('student_achievements as ach', 'std.student_achievement_id', '=', 'ach.id')
-                // ->join('student_scholarships as sch', 'std.student_scholarship_id', '=', 'sch.id')
-                ->select(
-                    // Data Registration
+        $registration = DB::table('registrations as rgs')
+        ->where('rgs.student_id', $id)
+       ->join('students as std', 'rgs.student_id', '=', 'std.id')
+       ->join('users', 'std.user_id', '=', 'users.id')
+       ->join('student_fathers as fth', 'std.student_father_id', '=', 'fth.id')
+       ->join('student_mothers as mth', 'std.student_mother_id', '=', 'mth.id')
+       ->join('student_guardians as grd', 'std.student_guardian_id', '=', 'grd.id')
+       ->select(
+           // Data Registration
                     'rgs.student_id',
                     'rgs.payment_id',
                     'rgs.class_pick',
@@ -75,7 +74,7 @@ class PpdbController extends Controller
                     'rgs.is_paid',
                     'rgs.code_registration',
                     'rgs.status',
-
+    
                     // Data Student 
                     'std.gender as student_gender',
                     'std.nisn',
@@ -88,7 +87,7 @@ class PpdbController extends Controller
                     'std.special_needs as student_special_needs',
                     'std.address',
                     'std.residence',
-                    'std.no_kks',
+                    'std.kks',
                     'std.order_family',
                     'std.kps',
                     'std.kip',
@@ -99,11 +98,12 @@ class PpdbController extends Controller
                     'std.time_to_school',
             
                     // Data Users Student
+                    'users.id as user_id',
                     'users.fullname',
                     'users.photo',
                     'users.phone',
                     'users.email',  
-
+    
                     // Data Father
                     'fth.name as father_name',
                     'fth.nik as father_nik',
@@ -112,7 +112,7 @@ class PpdbController extends Controller
                     'fth.job as father_job',
                     'fth.salary as father_salary',
                     'fth.special_needs as father_special_needs',
-
+    
                     // Data Mother
                     'mth.name as mother_name',
                     'mth.nik as mother_nik',
@@ -121,7 +121,7 @@ class PpdbController extends Controller
                     'mth.job as mother_job',
                     'mth.salary as mother_salary',
                     'mth.special_needs as mother_special_needs',
-
+    
                     // Data Guardian
                     'grd.name as guardian_name',
                     'grd.nik as guardian_nik',
@@ -130,17 +130,17 @@ class PpdbController extends Controller
                     'grd.job as guardian_job',
                     'grd.salary as guardian_salary',
                     'grd.special_needs as guardian_special_needs',
+                   );
 
-                    // Data Scholarship
-                    // 'sch.type as scholarship_type',
-                    // 'sch.descriptions as scholarship_descriptions',
-                    // 'sch.year_start_at as scholarship_year_start_at',
-                    // 'sch.year_finish_at as scholarship_year_finish_at',
-                )
-                ->get()->first();
+                $userId = $registration->get()->first()->user_id;
+                $scholarship = StudentScholarship::where('user_id', $userId)->get();
+                $achievement = StudentAchievement::where('user_id', $userId)->get();
 
-                return response()->json($data);
-
+                return response()->json([
+                    "data" => $registration->get()->first(),
+                    "scholarship" => $scholarship, 
+                    "achievement" => $achievement
+                ]);
     }
 
     public function store(Request $request)

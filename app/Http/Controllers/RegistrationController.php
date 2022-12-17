@@ -10,11 +10,11 @@ use Exception;
 class RegistrationController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $limit = request('limit',10);
-        $offset = (request('page',1) - 1) * $limit;
-
+    $limit = $request->limit;
+        $offset = ($request->page - 1) * $limit;
+      
         $registration = DB::table('registrations as rgs')
                         ->join('students as std', 'rgs.student_id', 'std.id')
                         ->join('users as usr', 'std.user_id', 'usr.id')
@@ -27,6 +27,7 @@ class RegistrationController extends Controller
                             'rgs.is_paid',
                             'rgs.code_registration',
                             'rgs.status',
+                            
                             // Data Users Student
                             'usr.fullname',
                             'usr.photo',
@@ -42,9 +43,9 @@ class RegistrationController extends Controller
             $filter = request()->filter;
             $data->where('usr.fullname', 'like', "%$filter%");
             $data->orWhere('rgs.status', 'like', "%$filter%");
+            $data->orderBy('rgs.id', 'desc');
         }
         
-        // $data->orderBy('rgs.id', 'desc');
 
         return response()->json(['data' => $data->get(), "total_page" => ceil($count / $limit)]);
     }
