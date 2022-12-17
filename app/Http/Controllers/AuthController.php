@@ -55,7 +55,7 @@ class AuthController extends Controller
             ]);
 
 
-        } catch(Exception    $e) {
+        } catch(Exception  $e) {
             return response()->json(['error' => $e->getMessage()]);
         }
      
@@ -119,7 +119,7 @@ class AuthController extends Controller
             'user_type' => $type_user->type,
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 360
+            'expires_in' => auth()->factory()->getTTL() * 4600
         ]);
     }
 }

@@ -35,8 +35,10 @@ $router->group(['prefix' => 'admin'], function () use ($router) {
     $router->get('/ppdb/{id}', 'PpdbController@show');
     
     // Registration
-    $router->put('/registration/update/{id}', 'RegistrationController@updateStatusRegistration');
+    $router->get('/registration', 'RegistrationController@index');
+    $router->get('/registration/getByIsPaid/{ispaid}', 'RegistrationController@getByIsPaid');
     $router->post('/registration/code', 'RegistrationController@checkCodeRegistration');
+    $router->put('/registration/update/{id}', 'RegistrationController@updateStatusRegistration');
 
     // User Typ e 
     $router->get('/user_type', 'UserTypeController@list');
