@@ -28,6 +28,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'email',
         'password',
         'photo',
+        'menu_permission',
         'status'
     ];
 

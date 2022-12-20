@@ -10,7 +10,7 @@ use Exception;
 class RegistrationController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Request $request) 
     {
     $limit = $request->limit;
         $offset = ($request->page - 1) * $limit;
@@ -44,8 +44,7 @@ class RegistrationController extends Controller
             $data->where('usr.fullname', 'like', "%$filter%");
             $data->orWhere('rgs.status', 'like', "%$filter%");
             $data->orderBy('rgs.id', 'desc');
-        }
-        
+      }
 
         return response()->json(['data' => $data->get(), "total_page" => ceil($count / $limit)]);
     }
@@ -120,7 +119,7 @@ class RegistrationController extends Controller
 
          $image = $request->file('image');
          $name = time().'.'.$image->getClientOriginalExtension();
-         $image->move(public_path('images'), $name);
+         $image->move(public_path('/home/smkb7435/public_html/api/images'), $name);
         
         return response()->json(['path' => url('images/'.$name)]);
     }

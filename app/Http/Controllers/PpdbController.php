@@ -56,9 +56,6 @@ class PpdbController extends Controller
         ->where('rgs.student_id', $id)
        ->join('students as std', 'rgs.student_id', '=', 'std.id')
        ->join('users', 'std.user_id', '=', 'users.id')
-       ->join('student_fathers as fth', 'std.student_father_id', '=', 'fth.id')
-       ->join('student_mothers as mth', 'std.student_mother_id', '=', 'mth.id')
-       ->join('student_guardians as grd', 'std.student_guardian_id', '=', 'grd.id')
        ->select(
            // Data Registration
                     'rgs.student_id',
@@ -72,6 +69,7 @@ class PpdbController extends Controller
                     'rgs.extracurricular',
                     'rgs.uniform',
                     'rgs.is_paid',
+          
                     'rgs.code_registration',
                     'rgs.status',
     
@@ -91,11 +89,40 @@ class PpdbController extends Controller
                     'std.order_family',
                     'std.kps',
                     'std.kip',
+                    'std.kartu_keluarga_image',
+                    'std.nisn_image',
                     'std.height',
                     'std.weight',
                     'std.amount_siblings',
                     'std.residence_distance',
                     'std.time_to_school',
+                    
+                    // Data Father
+                    'std.father_name',
+                    'std.father_nik',
+                    'std.father_birth',
+                    'std.father_education',
+                    'std.father_job',
+                    'std.father_income',
+                    'std.father_special_needs',
+                    
+                    // Data Mother
+                    'std.mother_name',
+                    'std.mother_nik',
+                    'std.mother_birth',
+                    'std.mother_education',
+                    'std.mother_job',
+                    'std.mother_income',
+                    'std.mother_special_needs',
+                    
+                    // Data Guardian
+                    'std.guardian_name',
+                    'std.guardian_nik',
+                    'std.guardian_birth',
+                    'std.guardian_education',
+                    'std.guardian_job',
+                    'std.guardian_income',
+                    'std.guardian_special_needs',
             
                     // Data Users Student
                     'users.id as user_id',
@@ -103,33 +130,6 @@ class PpdbController extends Controller
                     'users.photo',
                     'users.phone',
                     'users.email',  
-    
-                    // Data Father
-                    'fth.name as father_name',
-                    'fth.nik as father_nik',
-                    'fth.birth as father_birth',
-                    'fth.education as father_education',
-                    'fth.job as father_job',
-                    'fth.salary as father_salary',
-                    'fth.special_needs as father_special_needs',
-    
-                    // Data Mother
-                    'mth.name as mother_name',
-                    'mth.nik as mother_nik',
-                    'mth.birth as mother_birth',
-                    'mth.education as mother_education',
-                    'mth.job as mother_job',
-                    'mth.salary as mother_salary',
-                    'mth.special_needs as mother_special_needs',
-    
-                    // Data Guardian
-                    'grd.name as guardian_name',
-                    'grd.nik as guardian_nik',
-                    'grd.birth as guardian_birth',
-                    'grd.education as guardian_education',
-                    'grd.job as guardian_job',
-                    'grd.salary as guardian_salary',
-                    'grd.special_needs as guardian_special_needs',
                    );
 
                 $userId = $registration->get()->first()->user_id;
@@ -151,40 +151,6 @@ class PpdbController extends Controller
         $registration = DB::table('registrations')->where('student_id', $studentId);
 
         try {
-            $father = StudentFather::create([
-                'user_id' => Auth::user()->id ,
-                'name' => $request['father_name'],
-                'nik' => $request['father_nik'],
-                'birth' => $request['father_birth'],
-                'education' => $request['father_education'],
-                'job' => $request['father_job'], 
-                'salary' => $request['father_income'],
-                'special_needs' => $request['father_special_needs'],
-            ]);
-
-
-            $mother = StudentMother::create([
-                'user_id' => Auth::user()->id,
-                'name' => $request['mother_name'],
-                'nik' => $request['mother_nik'],
-                'birth' => $request['mother_birth'],
-                'education' => $request['mother_education'],
-                'job' => $request['mother_job'],
-                'salary' => $request['mother_income'],
-                'special_needs' => $request['mother_special_needs'],
-            ]);
-
-            $guardian = StudentGuardian::create([
-                'user_id' => Auth::user()->id,
-                'name' => $request['guardian_name'],
-                'nik' => $request['guardian_nik'],
-                'birth' => $request['guardian_birth'],
-                'education' => $request['guardian_education'],
-                'job' => $request['guardian_job'],
-                'salary' => $request['guardian_income'],
-                'special_needs' => $request['guardian_special_needs'],
-            ]);
-
             if($request->has('scholarships')) {
                 foreach ($request['scholarships'] as $sch) {
                 $scholarship = StudentScholarship::create([
@@ -211,9 +177,6 @@ class PpdbController extends Controller
             }
 
              $student->update([
-                'student_father_id' => $father->id,
-                'student_mother_id' => $mother->id,
-                'student_guardian_id' => $guardian->id,
                 'student_scholarship_id' => $scholarship->id,
                 'student_achievement_id' => $achievement->id ,
                 'gender' => $request['gender'],
@@ -237,17 +200,37 @@ class PpdbController extends Controller
                 'amount_siblings' => $request['amount_siblings'],
                 'residence_distance' => $request['residence_distance'],
                 'time_to_school' => $request['time_to_school'],
+                'father_name' => $request['father_name'],
+                'father_nik' => $request['father_nik'],
+                'father_birth' => $request['father_birth'],
+                'father_education' => $request['father_education'],
+                'father_job' => $request['father_job'], 
+                'father_income' => $request['father_income'],
+                'father_special_needs' => $request['father_special_needs'],
+                'mother_name' => $request['mother_name'],
+                'mother_nik' => $request['mother_nik'],
+                'mother_birth' => $request['mother_birth'],
+                'mother_education' => $request['mother_education'],
+                'mother_job' => $request['mother_job'], 
+                'mother_income' => $request['mother_income'],
+                'mother_special_needs' => $request['mother_special_needs'],
+                'guardian_name' => $request['guardian_name'],
+                'guardian_nik' => $request['guardian_nik'],
+                'guardian_birth' => $request['guardian_birth'],
+                'guardian_education' => $request['guardian_education'],
+                'guardian_job' => $request['guardian_job'], 
+                'guardian_income' => $request['guardian_income'],
+                'guardian_special_needs' => $request['guardian_special_needs'],
             ]);
 
             $registration->update([
                 'type_registration' => $request['type_registration'],
-    
                 'no_examinee' => $request['no_examinee'],
                 'no_serial_diploma' => $request['no_serial_diploma'],
                 'no_serial_skhus' => $request['no_serial_skhus'],
                 'extracurricular' => $request['extracurricular'],
                 'uniform' => $request['uniform'],
-                'status' => 'Belum Terveritifikasi'
+                'status' => 'Belum Diterima'
             ]);
         } catch (Exception $e) {
             return response()->json($e->getMessage());

@@ -8,5 +8,6 @@ class Admin extends Model
 {
     protected $fillable = [
         'user_id',
+        'menu_permission'
     ];
 }

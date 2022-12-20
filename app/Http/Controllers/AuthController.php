@@ -36,6 +36,7 @@ class AuthController extends Controller
         try {
 
             $user = User::create([
+                'menu_permission' => 'ppdb|',
                 'user_type_id' => $request['user_type_id'],
                 'fullname' => $request['fullname'],
                 'phone' => $request['phone'],
@@ -79,7 +80,7 @@ class AuthController extends Controller
 
         if($student) {
             $data = [
-                'student_id' => $student['id'],
+                'student_id' => $student->id,
                 'user' =>  $user
             ];
             
@@ -88,8 +89,8 @@ class AuthController extends Controller
 
         if($admin) {
             $data = [
-                'admin_id' => $student['id'],
-                'user' =>  $user
+                'admin' => $admin->id,
+                'user' => $user
             ];
             
             return response()->json($data);
@@ -107,15 +108,17 @@ class AuthController extends Controller
 
     protected function respondWithToken($token)
     {
-        $userIsLogin = Auth::user()->user_type_id;
+        $user = Auth::user();
+        $userTypeId = Auth::user()->user_type_id;
         $type_user = DB::table('users')
-            ->where('user_type_id', $userIsLogin)
+            ->where('user_type_id', $userTypeId)
             ->join('user_types', 'users.user_type_id', '=', 'user_types.id')
             ->select('user_types.type')
             ->get()
             ->first();
 
         return response()->json([
+            'menu_permission' => $user->menu_permission,
             'user_type' => $type_user->type,
             'access_token' => $token,
             'token_type' => 'bearer',
