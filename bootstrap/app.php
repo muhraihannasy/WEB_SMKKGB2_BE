@@ -97,6 +97,10 @@ $app->register(\Anik\Form\FormRequestServiceProvider::class);
 $app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 $app->register(Elibyy\TCPDF\ServiceProvider::class);
 class_alias(Elibyy\TCPDF\Facades\TCPDF::class, "PDF");
+$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
+
+
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -107,6 +111,9 @@ class_alias(Elibyy\TCPDF\Facades\TCPDF::class, "PDF");
 | can respond to, as well as the controllers that may handle them.
 |
 */
+
+class_alias('Maatwebsite\Excel\Facades\Excel', 'Excel'); 
+
 
 $app->router->group(
     [

@@ -20,6 +20,7 @@ $router->get("/", function () use ($router) {
 });
 
 $router->get("/ppdb/print/{id}", "PpdbAdminController@print");
+$router->get("/ppdb/export", "PpdbAdminController@export");
 
 $router->get("/blogs", "BlogController@list");
 $router->get("/blogs/{id}", "BlogController@show");

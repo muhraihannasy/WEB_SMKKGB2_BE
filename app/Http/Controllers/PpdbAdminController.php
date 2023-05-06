@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DataPPDBExport;
 use PDF;
 use App\Http\Requests\PPDBAdminRequest;
 use App\Models\Registration;
@@ -14,9 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-// use Barryvdh\DomPDF\Facade\Pdf;
 
-use Spatie\Browsershot\Browsershot;
 class PpdbAdminController extends Controller
 {
     // public function __construct()
@@ -704,5 +703,10 @@ class PpdbAdminController extends Controller
                 "Volly Ball",
             ],
         ];
+    }
+
+    public function export()
+    {
+        return Excel::download(new DataPPDBExport, 'product-'.date('d-m-Y').'.xlsx');
     }
 }
