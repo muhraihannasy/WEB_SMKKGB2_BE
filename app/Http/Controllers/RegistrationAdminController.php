@@ -28,54 +28,22 @@ class RegistrationAdminController extends Controller
         // get all data
         $count = $this->table::all()->count();
 
+
         // filter data
         if (request()->has("filter")) {
             $filter = request()->filter;
+            $fullname = "%$filter%";
+
             $data->where("registration_id", "like", "%$filter%");
-            $data->orWhere("status", "like", "%$filter%");
+            $data->orWhereHas('user', function($query) use ($fullname) {
+                $query->where('fullname', 'like', $fullname);
+            });
         }
 
         $s = RegistrationListResource::collection($data->get());
 
         return response()->json([
             "data" => $s,
-            "total_page" => ceil($count / $limit),
-        ]);
-    }
-
-    public function getByIsPaid($ispaid)
-    {
-        $limit = request("limit", 10);
-        $offset = (request("page", 1) - 1) * $limit;
-
-        $registration = DB::table("registrations as rgs")
-            ->where("rgs.is_paid", $ispaid)
-            ->join("students as std", "rgs.student_id", "std.id")
-            ->join("users as usr", "std.user_id", "usr.id")
-            ->select(
-                // Data Registration
-                "rgs.id",
-                "rgs.type_registration",
-                "rgs.student_id",
-                "rgs.from_school",
-                "rgs.is_paid",
-                "rgs.code_registration",
-                "rgs.status",
-                // Data Users Student
-                "usr.fullname",
-                "usr.photo"
-            );
-
-        $count = $registration->get()->count();
-        $data = $registration->limit($limit)->offset($offset);
-
-        if (request()->has("filter")) {
-            $filter = request()->filter;
-            $data = $registration->where("usr.fullname", "like", "%$filter%");
-        }
-
-        return response()->json([
-            "data" => $data->get(),
             "total_page" => ceil($count / $limit),
         ]);
     }
@@ -92,36 +60,8 @@ class RegistrationAdminController extends Controller
                 ])
                 ->get()
         );
-        // Data Registration
-        // "rgs.id",
-        // "rgs.student_id",
-        // "rgs.type_registration",
-        // "rgs.from_school",
-        // "rgs.is_paid",
-        // "rgs.code_registration",
-        // "rgs.status",
-
-        // // Data Users Student
-        // "usr.fullname",
-        // "usr.photo"
 
         return response()->json($data);
-    }
-
-    public function upload(Request $request)
-    {
-        if (!$request->hasFile("image")) {
-            return response()->json(["error" => "erorrs"]);
-        }
-
-        $image = $request->file("image");
-        $name = time() . "." . $image->getClientOriginalExtension();
-        $image->move(
-            public_path("/home/smkb7435/public_html/api/images"),
-            $name
-        );
-
-        return response()->json(["path" => url("images/" . $name)]);
     }
 
     public function updateStatusRegistration($id, Request $request)

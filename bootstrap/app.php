@@ -97,7 +97,6 @@ $app->register(\Anik\Form\FormRequestServiceProvider::class);
 $app->register(\Barryvdh\DomPDF\ServiceProvider::class);
 $app->register(Elibyy\TCPDF\ServiceProvider::class);
 class_alias(Elibyy\TCPDF\Facades\TCPDF::class, "PDF");
-$app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 
 
 
@@ -112,7 +111,6 @@ $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 |
 */
 
-class_alias('Maatwebsite\Excel\Facades\Excel', 'Excel'); 
 
 
 $app->router->group(

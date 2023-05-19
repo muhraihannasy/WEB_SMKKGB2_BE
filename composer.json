@@ -9,7 +9,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.4|^8.0",
+        "php": "^8.0",
         "anik/form-request": "^4.5",
         "barryvdh/laravel-dompdf": "^2.0",
         "elibyy/tcpdf-laravel": "^10.0",
@@ -17,7 +17,6 @@
         "fruitcake/laravel-cors": "^3.0",
         "haruncpi/laravel-id-generator": "^1.1",
         "laravel/lumen-framework": "^9.0",
-        "maatwebsite/excel": "^3.1",
         "nordsoftware/lumen-cors": "^3.5",
         "sirajcse/laravel-unique-id-generator": "^1.0",
         "tymon/jwt-auth": "^1.0"

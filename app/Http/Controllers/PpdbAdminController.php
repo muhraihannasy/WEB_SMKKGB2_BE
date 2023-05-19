@@ -61,7 +61,6 @@ class PpdbAdminController extends Controller
 
     public function store(PPDBAdminRequest $request)
     {
-        // return ;
         $yearBatchStart = date("Y");
         $yearBatchFinish = date("Y") + 2;
         $countId = Registration::orderBy("id", "desc")
@@ -141,9 +140,9 @@ class PpdbAdminController extends Controller
                 "student_achievement_id" => $achievement->id,
                 "gender" => $request["gender"],
                 "nisn" => $request["nisn"],
-                "nisn_image" => $request["foto_nisn"],
+                "nisn_image" => $request["nisn_image"],
                 "nik" => $request["nik"],
-                "kartu_keluarga_image" => $request["foto_kartu_keluarga"],
+                "kartu_keluarga_image" => $request["kartu_keluarga_image"],
                 "birth" => $request["birth"],
                 "no_certificate_registration" =>
                     $request["no_certificate_registration"],
@@ -533,180 +532,5 @@ class PpdbAdminController extends Controller
           PDF::Output(public_path($namefile));
 
         return response()->download(public_path($namefile));
-    }
-
-    public function util()
-    {
-        $data = [
-            "list_gender" => ["Laki-Laki", "Perempuan"],
-
-            "list_religion" => [
-                "Islam",
-                "Kristen/Protestan",
-                "Katholik",
-                "Hindu",
-                "Budha",
-                "Khonghucu",
-                "Lainyaa",
-            ],
-
-            "list_special_needs" => [
-                "Netra",
-                "Rungu",
-                "Grahita Ringan",
-                "Grahita Sedang",
-                "Dasksa Ringan",
-                "Daksa Sedang",
-                "Laras",
-                "Wicara",
-                "Tuna Ganda",
-                "Hiper Aktif",
-                "Cerdas Istimewa",
-                "Bakat Istimewa",
-                "Kesulitan Belajar",
-                "Narkoba",
-                "Indigo",
-                "Down Sindrome",
-                "Autis",
-            ],
-
-            "list_residence" => [
-                "Bersama Orang Tua",
-                "Wali",
-                "Kos",
-                "Asrama",
-                "Panti Asuhan",
-                "Lainnya",
-            ],
-
-            "list_transport" => [
-                "Jalan Kaki",
-                "Kendaraan Pribadi",
-                "Kendaraan Umum/Angkot/Pete-pete",
-                "Jemputan Sekolah",
-                "Kereta api",
-                "Ojek",
-                "Andong/Bendi/Sado/Dokar/Delma/Beca",
-                "Perahu Penyebrangan/Rakit/Getek",
-                "Lainya",
-            ],
-
-            "list_reason_kip" => [
-                "Daerah Konflik",
-                "Dampak Bencana Alam",
-                "Kelainan Fisik",
-                "Penah Drop Out",
-                "Keluarga Pidana/Berada di LAPAS",
-                "Pemegang PKH/PKS/KKS",
-                "Siswa Miskin/Rentan Miskin",
-                "Yatim Piatu/Panti Asuhan/Panti Sosial",
-            ],
-
-            "list_education" => [
-                "Tidak Sekolah",
-                "Putus SD",
-                "SD Sederajat",
-                "SMP Sederajat",
-                "SMA Sederajat",
-                "D1",
-                "D2",
-                "D3",
-                "D4/S1",
-                "S2",
-                "S3",
-            ],
-
-            "list_profession" => [
-                "Tidak Bekerja",
-                "Nelayan",
-                "Petani",
-                "Peternak",
-                "PNS/TNI/Porli",
-                "Karyawan Swasta",
-                "Pedagang Kecil",
-                "Pedagang Besar",
-                "Wiraswata",
-                "Wirausaha",
-                "Buruh",
-                "Pensiunan",
-                "Sudah Meninggal",
-            ],
-
-            "list_income" => [
-                "Kurang dari Rp. 500,000",
-                "Rp. 500,000 - Rp. 999,999",
-                "Rp. 1,000,000 - Rp. 1,999,999",
-                "Rp. 2,000,000 - Rp. 4,999,999",
-                "Rp. 5,000,000 - Rp. 20,000,000",
-                "Tidak Berpenghasilan",
-            ],
-
-            "list_distance" => [
-                "Kurang dari 1 KM",
-                "Lebih dari 1 KM",
-                "Jarak rumah peserta didik ke sekolah, kurang dari 1 km atau lebih dari 1 km",
-            ],
-
-            "list_type_achievements" => [
-                "Sains",
-                "Seni",
-                "Olahraga",
-                "Lain-lain",
-            ],
-
-            "list_level_achievements" => [
-                "Sekolah",
-                "Kabupaten",
-                "Kecamatan",
-                "Provinsi",
-                "Nasional",
-                "Internasional",
-            ],
-
-            "list_scholarship" => [
-                "Anak Berprestasi",
-                "Anak Miskin",
-                "Pendidikan",
-                "Unggulan",
-                "Lain-lain",
-            ],
-
-            "list_type_registration" => [
-                "Siswa Baru",
-                "Pindahan",
-                "Kembali Bersekolah",
-            ],
-
-            "list_competency" => [
-                "Teknik Komputer Jaringan",
-                "Akutansi dan Keuangan Lembaga",
-                "Otomasi dan Tata Kelola Perkantoran",
-            ],
-
-            "list_uniforms_size" => ["S", "M", "L", "XL", "XXL"],
-
-            "list_extracurriculer" => [
-                "OSIS",
-                "Pramuka",
-                "Paskibra",
-                "Futsal",
-                "Rohis",
-                "PMR",
-                "Karate",
-                "Taekwondo",
-                "Angklung",
-                "Marching Band",
-                "English Club",
-                "Seni Tari",
-                "Pencak Silat",
-                "Basket Ball",
-                "Volly Ball",
-            ],
-        ];
-    }
-
-    public function export()
-    {
-        return Excel::download(new DataPPDBExport, 'product-'.date('d-m-Y').'.xlsx');
     }
 }

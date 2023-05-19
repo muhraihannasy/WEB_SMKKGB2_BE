@@ -20,7 +20,6 @@ $router->get("/", function () use ($router) {
 });
 
 $router->get("/ppdb/print/{id}", "PpdbAdminController@print");
-$router->get("/ppdb/export", "PpdbAdminController@export");
 
 $router->get("/blogs", "BlogController@list");
 $router->get("/blogs/{id}", "BlogController@show");
@@ -51,7 +50,10 @@ $router->group(["middleware" => "auth"], function ($router) {
 
     // Admin
     $router->group(["prefix" => "admin"], function () use ($router) {
+        
+        $router->get('/dashboard', 'DashboardController@index');
         $router->get("/", "AdminController@index");
+
 
         // Admin
         $router->put("/user/update/{id}", "AdminController@update");
@@ -64,10 +66,6 @@ $router->group(["middleware" => "auth"], function ($router) {
 
         // Registration
         $router->get("/registration", "RegistrationAdminController@index");
-        $router->get(
-            "/registration/getByIsPaid/{ispaid}",
-            "RegistrationController@getByIsPaid"
-        );
         $router->post(
             "/registration/code",
             "RegistrationController@checkCodeRegistration"

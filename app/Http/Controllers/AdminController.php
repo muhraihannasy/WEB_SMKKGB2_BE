@@ -26,7 +26,6 @@ class AdminController extends Controller
                     "fullname" => $request->fullname,
                     "photo" => $request->photo,
                     "phone" => $request->phone,
-                    "email" => $request->email,
                     "menu_permission" => $request->menu_permission,
                 ]);
 
